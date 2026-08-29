@@ -65,18 +65,11 @@ public class GameManager : MonoBehaviour
 
     public void OnBallMiss()
     {
-        lives--;
-
-        if (lives > 0) {
-            ResetLevel();
-        } else {
-            GameOver();
-        }
+        ResetLevel();
     }
 
     private void ResetLevel()
     {
-        paddle.ResetPaddle();
         ball.ResetBall();
     }
 

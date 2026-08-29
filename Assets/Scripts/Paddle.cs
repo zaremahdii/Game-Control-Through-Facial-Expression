@@ -5,6 +5,8 @@ public class Paddle : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 direction;
+    private float aiHorizontalInput;
+    private bool hasAiInput;
 
     public float speed = 30f;
     public float maxBounceAngle = 75f;
@@ -25,8 +27,26 @@ public class Paddle : MonoBehaviour
         transform.position = new Vector2(0f, transform.position.y);
     }
 
+    public void SetAIInput(float horizontalInput)
+    {
+        aiHorizontalInput = Mathf.Clamp(horizontalInput, -1f, 1f);
+        hasAiInput = true;
+    }
+
+    public void ClearAIInput()
+    {
+        aiHorizontalInput = 0f;
+        hasAiInput = false;
+    }
+
     private void Update()
     {
+        if (hasAiInput)
+        {
+            direction = Vector2.right * aiHorizontalInput;
+            return;
+        }
+
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
             direction = Vector2.left;
         } else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
@@ -40,6 +60,8 @@ public class Paddle : MonoBehaviour
     {
         if (direction != Vector2.zero) {
             rb.AddForce(direction * speed);
+        } else {
+            rb.velocity = new Vector2(0f, rb.velocity.y);
         }
     }
 

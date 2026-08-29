@@ -31,6 +31,7 @@ public class AIWebSocketClient : MonoBehaviour
     }
 
     public bool IsConnected { get; private set; }
+    public float LastReceivedTime { get; private set; } = -1f;
 
     private void OnEnable()
     {
@@ -160,6 +161,13 @@ public class AIWebSocketClient : MonoBehaviour
             Debug.LogWarning($"AI WebSocket: {error}", this);
 
         if (logReceivedData && result != null)
+        {
+            LastReceivedTime = Time.unscaledTime;
             Debug.Log($"AI direction: {result.direction}, emotion: {result.emotion}", this);
+        }
+        else if (result != null)
+        {
+            LastReceivedTime = Time.unscaledTime;
+        }
     }
 }

@@ -17,8 +17,10 @@ The AI server setup guide is located at `E:\facial expression\Game-Control-Throu
 1. Open the project with Unity `2022.3.62f3`.
 2. Create an empty GameObject in the scene, for example `AI Client`.
 3. Add the `AIWebSocketClient` component.
-4. Set `Server Url` to `ws://127.0.0.1:8000/ws`.
-5. Play the scene.
+4. Add the `AIInputController` component to the same GameObject.
+5. Assign the scene Paddle to the `Paddle` field, or leave it empty for automatic lookup.
+6. Set `Server Url` to `ws://127.0.0.1:8000/ws`.
+7. Play the scene.
 
 The client reconnects every two seconds after a disconnection. Received messages are displayed in the Unity Console.
 
@@ -27,9 +29,10 @@ The client reconnects every two seconds after a disconnection. Received messages
 ```text
 Assets/Scripts/AI/AIControlResult.cs
 Assets/Scripts/AI/AIWebSocketClient.cs
+Assets/Scripts/AI/AIInputController.cs
 ```
 
-`AIWebSocketClient` only receives data. It does not contain paddle movement or game logic.
+`AIWebSocketClient` only receives data. `AIInputController` maps fresh `left`, `right`, and `neutral` values to the Paddle. A missing, disconnected, or stale message stops the paddle.
 
 ## Message format
 
