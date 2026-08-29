@@ -1,37 +1,37 @@
 # Game Control Through Facial Expression
 
-این پروژهٔ Unity دادهٔ کنترل را از سرویس AI محلی دریافت می‌کند. Unity دوربین را برای این مسیر AI باز یا ارسال نمی‌کند.
+This Unity project receives AI control data from a local FastAPI server. Unity does not capture or upload camera frames for this AI pipeline.
 
-## پیش‌نیاز
+## Prerequisite
 
-سرویس AI باید روی همان سیستم در حال اجرا باشد و آدرس WebSocket زیر در دسترس باشد:
+The local AI server must be running and this WebSocket endpoint must be available:
 
 ```text
 ws://127.0.0.1:8000/ws
 ```
 
-راهنمای اجرای سرویس در فایل `E:\facial expression\AI\README.md` قرار دارد.
+The AI server setup guide is located at `E:\facial expression\Game-Control-Through-Facial-Expression-AI\README.md`.
 
-## راه‌اندازی کلاینت WebSocket
+## WebSocket client setup
 
-1. پروژه را با Unity `2022.3.62f3` باز کنید.
-2. در صحنه یک GameObject خالی بسازید؛ مثلاً با نام `AI Client`.
-3. کامپوننت `AIWebSocketClient` را به آن اضافه کنید.
-4. مقدار `Server Url` را روی `ws://127.0.0.1:8000/ws` بگذارید.
-5. صحنه را اجرا کنید.
+1. Open the project with Unity `2022.3.62f3`.
+2. Create an empty GameObject in the scene, for example `AI Client`.
+3. Add the `AIWebSocketClient` component.
+4. Set `Server Url` to `ws://127.0.0.1:8000/ws`.
+5. Play the scene.
 
-کلاینت به‌صورت خودکار وصل می‌شود و پس از قطع اتصال، هر دو ثانیه تلاش می‌کند دوباره وصل شود. پیام‌های دریافت‌شده در Console یونیتی نمایش داده می‌شوند.
+The client reconnects every two seconds after a disconnection. Received messages are displayed in the Unity Console.
 
-## فایل‌های کلاینت
+## Client files
 
 ```text
 Assets/Scripts/AI/AIControlResult.cs
 Assets/Scripts/AI/AIWebSocketClient.cs
 ```
 
-`AIWebSocketClient` فقط داده را دریافت می‌کند و منطق حرکت paddle یا اجرای بازی در آن قرار ندارد.
+`AIWebSocketClient` only receives data. It does not contain paddle movement or game logic.
 
-## فرمت پیام
+## Message format
 
 ```json
 {
@@ -40,4 +40,4 @@ Assets/Scripts/AI/AIWebSocketClient.cs
 }
 ```
 
-در نسخهٔ فعلی تست، همین دو فیلد از سرور دریافت می‌شوند. فیلدهای تکمیلی مدل C# برای توسعهٔ بعدی آماده‌اند.
+The current test server sends `direction` and `emotion`. The C# model also includes optional fields for later expansion.
