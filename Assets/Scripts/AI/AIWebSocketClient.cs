@@ -16,7 +16,9 @@ public class AIWebSocketClient : MonoBehaviour
     private ClientWebSocket socket;
     private CancellationTokenSource cancellation;
     private AIControlResult latestResult;
+    private byte[] latestPreviewBytes;
     private bool hasNewResult;
+    private bool hasNewPreview;
     private string pendingError;
 
     public AIControlResult LatestResult
@@ -32,6 +34,22 @@ public class AIWebSocketClient : MonoBehaviour
 
     public bool IsConnected { get; private set; }
     public float LastReceivedTime { get; private set; } = -1f;
+
+    public bool TryGetLatestPreview(out byte[] previewBytes)
+    {
+        lock (resultLock)
+        {
+            if (!hasNewPreview)
+            {
+                previewBytes = null;
+                return false;
+            }
+
+            previewBytes = latestPreviewBytes;
+            hasNewPreview = false;
+            return true;
+        }
+    }
 
     private void OnEnable()
     {
@@ -121,18 +139,26 @@ public class AIWebSocketClient : MonoBehaviour
                 }
                 while (!receiveResult.EndOfMessage);
 
-                if (receiveResult.MessageType != WebSocketMessageType.Text)
-                    continue;
-
-                string json = Encoding.UTF8.GetString(message.ToArray());
-                AIControlResult result = JsonUtility.FromJson<AIControlResult>(json);
-                if (result == null)
-                    continue;
-
-                lock (resultLock)
+                if (receiveResult.MessageType == WebSocketMessageType.Text)
                 {
-                    latestResult = result;
-                    hasNewResult = true;
+                    string json = Encoding.UTF8.GetString(message.ToArray());
+                    AIControlResult result = JsonUtility.FromJson<AIControlResult>(json);
+                    if (result == null)
+                        continue;
+
+                    lock (resultLock)
+                    {
+                        latestResult = result;
+                        hasNewResult = true;
+                    }
+                }
+                else if (receiveResult.MessageType == WebSocketMessageType.Binary)
+                {
+                    lock (resultLock)
+                    {
+                        latestPreviewBytes = message.ToArray();
+                        hasNewPreview = true;
+                    }
                 }
             }
         }
