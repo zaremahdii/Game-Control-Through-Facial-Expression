@@ -14,7 +14,7 @@ The local AI server must be running and this WebSocket endpoint must be availabl
 ws://127.0.0.1:8000/ws
 ```
 
-The AI server setup guide is located at `E:\facial expression\Game-Control-Through-Facial-Expression-AI\README.md`.
+See the AI server repository README for setup instructions.
 
 ## WebSocket client setup
 
