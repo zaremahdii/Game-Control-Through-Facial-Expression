@@ -1,2 +1,43 @@
-# Game-Control-Through-Facial-Expression
-This research introduces a novel, hands-free video game control system using advanced computer vision: Facial Expression Recognition (FER) and Head Pose Estimation (HPE). The system allows players to navigate and trigger actions using natural head movements and facial expressions. 
+# Game Control Through Facial Expression
+
+این پروژهٔ Unity دادهٔ کنترل را از سرویس AI محلی دریافت می‌کند. Unity دوربین را برای این مسیر AI باز یا ارسال نمی‌کند.
+
+## پیش‌نیاز
+
+سرویس AI باید روی همان سیستم در حال اجرا باشد و آدرس WebSocket زیر در دسترس باشد:
+
+```text
+ws://127.0.0.1:8000/ws
+```
+
+راهنمای اجرای سرویس در فایل `E:\facial expression\AI\README.md` قرار دارد.
+
+## راه‌اندازی کلاینت WebSocket
+
+1. پروژه را با Unity `2022.3.62f3` باز کنید.
+2. در صحنه یک GameObject خالی بسازید؛ مثلاً با نام `AI Client`.
+3. کامپوننت `AIWebSocketClient` را به آن اضافه کنید.
+4. مقدار `Server Url` را روی `ws://127.0.0.1:8000/ws` بگذارید.
+5. صحنه را اجرا کنید.
+
+کلاینت به‌صورت خودکار وصل می‌شود و پس از قطع اتصال، هر دو ثانیه تلاش می‌کند دوباره وصل شود. پیام‌های دریافت‌شده در Console یونیتی نمایش داده می‌شوند.
+
+## فایل‌های کلاینت
+
+```text
+Assets/Scripts/AI/AIControlResult.cs
+Assets/Scripts/AI/AIWebSocketClient.cs
+```
+
+`AIWebSocketClient` فقط داده را دریافت می‌کند و منطق حرکت paddle یا اجرای بازی در آن قرار ندارد.
+
+## فرمت پیام
+
+```json
+{
+  "direction": "left",
+  "emotion": "neutral"
+}
+```
+
+در نسخهٔ فعلی تست، همین دو فیلد از سرور دریافت می‌شوند. فیلدهای تکمیلی مدل C# برای توسعهٔ بعدی آماده‌اند.
