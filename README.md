@@ -2,6 +2,10 @@
 
 This Unity project receives AI control data from a local FastAPI server. Unity does not capture or upload camera frames for this AI pipeline.
 
+## AI server repository
+
+Clone and run the AI server from [Game-Control-Through-Facial-Expression-AI](https://github.com/zaremahdii/Game-Control-Through-Facial-Expression-AI). This Unity client connects to that local service through WebSocket.
+
 ## Prerequisite
 
 The local AI server must be running and this WebSocket endpoint must be available:
@@ -30,9 +34,16 @@ The client reconnects every two seconds after a disconnection. Received messages
 Assets/Scripts/AI/AIControlResult.cs
 Assets/Scripts/AI/AIWebSocketClient.cs
 Assets/Scripts/AI/AIInputController.cs
+Assets/Scripts/AI/AIStreamPreview.cs
 ```
 
 `AIWebSocketClient` only receives data. `AIInputController` maps fresh `left`, `right`, and `neutral` values to the Paddle. A missing, disconnected, or stale message stops the paddle.
+
+## Camera preview
+
+The scene contains a `RawImage` in the top-right corner. `AIStreamPreview` receives JPEG preview frames through the existing WebSocket and displays them there.
+
+Unity does not open the physical webcam for this preview. Python owns the webcam and sends a `320x180` preview at up to `10 FPS`, avoiding webcam-access conflicts between Unity and Python.
 
 ## Message format
 
